@@ -29,7 +29,7 @@ const PickStore = () => {
         <div>
             <h1>Pick Store</h1>
             {/*map over state to get access to each store
-            //in the return of stores you will add a button that links to your listinput route and includes the id of the store*/}
+            //in the return of stores you will add a button that links to your listinput route and includes the id of the store MUST CHANGE onChange to onClick*/}
             <select onChange={storeChanged}>
                 {stores.map((store) => {
                     return (
@@ -39,24 +39,6 @@ const PickStore = () => {
                     );
                 })}
             </select>
-            {/* <div className="dropdown">
-                    <button
-                        className="btn btn-secondary dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Pick Store
-                    </button>
-                    <ul className="dropdown-menu">
-                        <li key={index} >
-                            <Link to="/" className="dropdown-item" href="#">
-                                {store.name}
-                            </Link>
-                        </li>
-        
-                    </ul>
-                </div> */}
         </div>
     );
 };

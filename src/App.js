@@ -4,6 +4,10 @@ import Home from "./Home";
 import List from "./List";
 import ListInput from "./ListInput";
 import Layout from "./Layout";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { Container, Row, Col } from 'react-bootstrap';
+
 
 function App() {
     return (

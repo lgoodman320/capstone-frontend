@@ -1,6 +1,8 @@
 import { getAllByLabelText } from "@testing-library/react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+// import CardBodyOnly from "./CardBodyOnly";
+import { Card, Container, Col, Row, Table, Tab, Form } from "react-bootstrap";
 
 const ListInput = () => {
     const [newItem, setNewItem] = useState("");
@@ -90,7 +92,7 @@ const ListInput = () => {
     };
 
     const listToUse = searchResults.length > 0 ? searchResults : listItems;
-    const label = searchResults.length > 0 ? "Search Results" : "Current List";
+    const label = searchResults.length > 0 ? "Search Results" : "Sorted List";
 
     return (
         <form className="list-form" onSubmit={searchForItems}>
@@ -116,25 +118,50 @@ const ListInput = () => {
                 Search for items
             </button>
             <h1>{label}</h1>
-            <ul>
-                {listToUse.map((item, index) => {
-                    return (
-                        <li key={index} className="list-item">
-                            {item.name} {item.aisle}{" "}
-                            {item.fulfillment_store_number}{" "}
-                            <button
-                                onClick={(evt) => {
-                                    evt.preventDefault();
+            <Table striped bordered hover>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Aisle</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {listToUse.map((item, index) => {
+                        return (
+                            <tr key={item.id} style={{}}>
+                                <td>
+                                    {searchResults.length === 0 ? (
+                                        <Form.Check
+                                            style={{ display: "inline", padding: 10 }}
+                                            onChange={(evt) => {
+                                                //TODO add logic to update array here
+                                            }}
+                                        />
+                                    ) : null}
+                                    {item.name}
+                                </td>
+                                <td>{item.aisle.trim()}</td>
+                                <td>
+                                    {searchResults.length > 0 ? (
+                                        <button
+                                            onClick={(evt) => {
+                                                evt.preventDefault();
 
-                                    addToList(item);
-                                }}
-                            >
-                                Add to List
-                            </button>
-                        </li>
-                    );
-                })}
-            </ul>
+                                                addToList(item);
+                                            }}
+                                        >
+                                            Add to List
+                                        </button>
+                                    ) : (
+                                        <div>Add QTY here</div>
+                                    )}
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </Table>
         </form>
     );
 };
