@@ -37,25 +37,28 @@ const ListInput = () => {
             }
         });
         setSearchResults(items);
-        // const updatedItems = [...items, newItem];
-        // setItems(updatedItems);
-        // // setNewItem('')
-        // console.log(updatedItems);
     };
 
     const itemTypedIn = (evt) => {
-        // if (evt.target.value !== "") {
         setNewItem(evt.target.value);
-        // }
     };
+
+    // const handleClick = (evt) => {
+    //    const copiedItems = [...listItems];
+    //    copiedItems[index].done = true;
+    // };
 
     const addToList = (item) => {
         console.log(item);
         console.log("hit");
 
-        let newList = [...listItems, item].sort((a, b) => {
+        // LEFT OFF TRYING TO ADD STRIKETHROUGH FUNCTIONALITY USING THE HOMEWORK FOR TO DO REACT APP
+        // TRYING TO CHANGE THE ITEM TO AN OBJECT AND ADD A 'done: false' TO THE ITEM OBJECT:  [...listItems, {item: item, done: false}]. I GET
+        // CANNOT READ PROPERTY OF UNDEFINED (reading 'trim').  I NEED TO CHANGE IT BACK TO  [...listItems, item]
+
+        let newList = [...listItems, { ...item, done: false }].sort((a, b) => {
             try {
-                console.log(item);
+                console.log(listItems.item);
                 let aMatch = a.aisle.match(/\d+/);
                 let bMatch = b.aisle.match(/\d+/);
                 let aNums = 999;
@@ -129,13 +132,22 @@ const ListInput = () => {
                 <tbody>
                     {listToUse.map((item, index) => {
                         return (
-                            <tr key={item.id} style={{}}>
+                            <tr key={item.id} style={{ 
+                                textDecoration: item.done
+                                ? "line-through" : "none"
+                            }}>
                                 <td>
                                     {searchResults.length === 0 ? (
                                         <Form.Check
-                                            style={{ display: "inline", padding: 10 }}
-                                            onChange={(evt) => {
-                                                //TODO add logic to update array here
+                                            style={{
+                                                display: "inline",
+                                                padding: 10,
+                                            }}
+                                            onClick={() => {
+                                                const copiedItems = [...listItems];
+                                                copiedItems[index].done = !copiedItems[index].done;
+                                                setListItems(copiedItems);
+                                                console.log(copiedItems);
                                             }}
                                         />
                                     ) : null}
