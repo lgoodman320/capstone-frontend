@@ -1,16 +1,16 @@
-import { getAllByLabelText } from "@testing-library/react";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 // import CardBodyOnly from "./CardBodyOnly";
-import { Card, Container, Col, Row, Table, Tab, Form } from "react-bootstrap";
+import { Container, Col, Row, Table , Form } from "react-bootstrap";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 const ListInput = () => {
-    const [newItem, setNewItem] = useState("");
-    const [listItems, setListItems] = useState([]);
-    const [searchResults, setSearchResults] = useState([]);
-    const [itemQuantity, setItemQuantity] = useState("");
-    // add useParams to get storeID
-    const params = useParams();
+    const [newItem, setNewItem] = useState(""); // set state for newItem
+    const [listItems, setListItems] = useState([]); // set state for list items
+    const [searchResults, setSearchResults] = useState([]); // set state for search results
+ 
+    const params = useParams(); // add useParams to get storeID
 
     const searchForItems = async (evt) => {
         evt.preventDefault();
@@ -43,20 +43,16 @@ const ListInput = () => {
         setNewItem(evt.target.value);
     };
 
-    // const handleClick = (evt) => {
-    //    const copiedItems = [...listItems];
-    //    copiedItems[index].done = true;
-    // };
-
     const addToList = (item) => {
         console.log(item);
         console.log("hit");
 
-        // LEFT OFF TRYING TO ADD STRIKETHROUGH FUNCTIONALITY USING THE HOMEWORK FOR TO DO REACT APP
-        // TRYING TO CHANGE THE ITEM TO AN OBJECT AND ADD A 'done: false' TO THE ITEM OBJECT:  [...listItems, {item: item, done: false}]. I GET
-        // CANNOT READ PROPERTY OF UNDEFINED (reading 'trim').  I NEED TO CHANGE IT BACK TO  [...listItems, item]
-
-        let newList = [...listItems, { ...item, done: false }].sort((a, b) => {
+        // Spread out the listItems array and spread out the items object and add done:false
+        // to the items object
+        let newList = [
+            ...listItems,
+            { ...item, done: false, quantity: 1 },
+        ].sort((a, b) => {
             try {
                 console.log(listItems.item);
                 let aMatch = a.aisle.match(/\d+/);
@@ -92,6 +88,20 @@ const ListInput = () => {
         setListItems(newList);
         setNewItem("");
         setSearchResults([]);
+    };
+
+    const increaseQuantity = (index) => {
+        const copiedItems = [...listItems];
+        copiedItems[index].quantity += 1;
+        setListItems(copiedItems);
+
+    };
+
+    const decreaseQuantity = (index) => {
+        const copiedItems = [...listItems];
+        copiedItems[index].quantity -= 1;
+        setListItems(copiedItems);
+
     };
 
     const listToUse = searchResults.length > 0 ? searchResults : listItems;
@@ -132,10 +142,14 @@ const ListInput = () => {
                 <tbody>
                     {listToUse.map((item, index) => {
                         return (
-                            <tr key={item.id} style={{ 
-                                textDecoration: item.done
-                                ? "line-through" : "none"
-                            }}>
+                            <tr
+                                key={item.id}
+                                style={{
+                                    textDecoration: item.done
+                                        ? "line-through"
+                                        : "none",
+                                }}
+                            >
                                 <td>
                                     {searchResults.length === 0 ? (
                                         <Form.Check
@@ -144,8 +158,11 @@ const ListInput = () => {
                                                 padding: 10,
                                             }}
                                             onClick={() => {
-                                                const copiedItems = [...listItems];
-                                                copiedItems[index].done = !copiedItems[index].done;
+                                                const copiedItems = [
+                                                    ...listItems,
+                                                ];
+                                                copiedItems[index].done =
+                                                    !copiedItems[index].done;
                                                 setListItems(copiedItems);
                                                 console.log(copiedItems);
                                             }}
@@ -159,14 +176,38 @@ const ListInput = () => {
                                         <button
                                             onClick={(evt) => {
                                                 evt.preventDefault();
-
                                                 addToList(item);
                                             }}
                                         >
                                             Add to List
                                         </button>
                                     ) : (
-                                        <div>Add QTY here</div>
+                                        <Container>
+                                            <Row>
+                                                <Col>
+                                                    <button onClick={(
+                                                                evt,
+                                                            ) => {
+                                                                evt.preventDefault();
+                                                                increaseQuantity(index);
+                                                            }}>
+                                                        <AddIcon
+                                                        />
+                                                    </button>
+                                                </Col>
+                                                <Col>{item.quantity}</Col>
+                                                <Col
+                                                    style={{ paddingRight: 0 }}
+                                                >
+                                                    <button onClick={(evt) => {
+                                                            evt.preventDefault();
+                                                            decreaseQuantity(index);
+                                                        }}>
+                                                        <RemoveIcon />
+                                                    </button>
+                                                </Col>
+                                            </Row>
+                                        </Container>
                                     )}
                                 </td>
                             </tr>
