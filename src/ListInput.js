@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 // import CardBodyOnly from "./CardBodyOnly";
-import { Container, Col, Row, Table , Form } from "react-bootstrap";
+import { Container, Col, Row, Table, Form } from "react-bootstrap";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
@@ -9,7 +9,7 @@ const ListInput = () => {
     const [newItem, setNewItem] = useState(""); // set state for newItem
     const [listItems, setListItems] = useState([]); // set state for list items
     const [searchResults, setSearchResults] = useState([]); // set state for search results
- 
+
     const params = useParams(); // add useParams to get storeID
 
     const searchForItems = async (evt) => {
@@ -46,6 +46,14 @@ const ListInput = () => {
     const addToList = (item) => {
         console.log(item);
         console.log("hit");
+
+        const existingItem = listItems.find((listItem) => {
+            return listItem.id === item.id;
+        });
+        if (existingItem) {
+            alert("Already in your list");
+            return;
+        }
 
         // Spread out the listItems array and spread out the items object and add done:false
         // to the items object
@@ -94,14 +102,14 @@ const ListInput = () => {
         const copiedItems = [...listItems];
         copiedItems[index].quantity += 1;
         setListItems(copiedItems);
-
     };
 
     const decreaseQuantity = (index) => {
         const copiedItems = [...listItems];
-        copiedItems[index].quantity -= 1;
-        setListItems(copiedItems);
-
+        if (copiedItems[index].quantity > 0) {
+            copiedItems[index].quantity -= 1;
+            setListItems(copiedItems);
+        }
     };
 
     const listToUse = searchResults.length > 0 ? searchResults : listItems;
@@ -161,8 +169,27 @@ const ListInput = () => {
                                                 const copiedItems = [
                                                     ...listItems,
                                                 ];
+                                                if (copiedItems[index].done) {
+                                                    copiedItems[
+                                                        index
+                                                    ].quantity =
+                                                        copiedItems[
+                                                            index
+                                                        ].preCheckedQuantity;
+                                                } else {
+                                                    copiedItems[
+                                                        index
+                                                    ].preCheckedQuantity =
+                                                        copiedItems[
+                                                            index
+                                                        ].quantity;
+                                                    copiedItems[
+                                                        index
+                                                    ].quantity = 0;
+                                                }
                                                 copiedItems[index].done =
                                                     !copiedItems[index].done;
+
                                                 setListItems(copiedItems);
                                                 console.log(copiedItems);
                                             }}
@@ -185,24 +212,31 @@ const ListInput = () => {
                                         <Container>
                                             <Row>
                                                 <Col>
-                                                    <button onClick={(
-                                                                evt,
-                                                            ) => {
-                                                                evt.preventDefault();
-                                                                increaseQuantity(index);
-                                                            }}>
-                                                        <AddIcon
-                                                        />
+                                                    <button
+                                                        onClick={(evt) => {
+                                                            evt.preventDefault();
+                                                            increaseQuantity(
+                                                                index
+                                                            );
+                                                        }}
+                                                    >
+                                                        <AddIcon />
                                                     </button>
                                                 </Col>
-                                                <Col>{item.quantity}</Col>
+                                                <Col style={{ width: 50 }}>
+                                                    {item.quantity}
+                                                </Col>
                                                 <Col
                                                     style={{ paddingRight: 0 }}
                                                 >
-                                                    <button onClick={(evt) => {
+                                                    <button
+                                                        onClick={(evt) => {
                                                             evt.preventDefault();
-                                                            decreaseQuantity(index);
-                                                        }}>
+                                                            decreaseQuantity(
+                                                                index
+                                                            );
+                                                        }}
+                                                    >
                                                         <RemoveIcon />
                                                     </button>
                                                 </Col>

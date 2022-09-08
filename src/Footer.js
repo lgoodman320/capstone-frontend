@@ -1,6 +1,8 @@
 const Footer = () => {
     return (
-        <h6>Footer</h6>
+        <div style={{ position: "fixed", bottom: 0 }}>
+            <h6>Footer</h6>
+        </div>
     );
 };
 
